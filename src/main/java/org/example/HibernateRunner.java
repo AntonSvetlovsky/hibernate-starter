@@ -1,7 +1,9 @@
 package org.example;
 
-import entity.Role;
-import entity.User;
+import org.example.converter.BirthdayConverter;
+import org.example.entity.Birthday;
+import org.example.entity.Role;
+import org.example.entity.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy;
@@ -16,6 +18,7 @@ public class HibernateRunner {
         configuration.configure();
         configuration.addAnnotatedClass(User.class);
         configuration.setPhysicalNamingStrategy(new CamelCaseToUnderscoresNamingStrategy());
+        configuration.addAttributeConverter(new BirthdayConverter());//if field was not annotated
 
         try (SessionFactory sessionFactory = configuration.buildSessionFactory();
              Session session = sessionFactory.openSession()) {
@@ -25,8 +28,7 @@ public class HibernateRunner {
                     .username("ivan@gmail.com")
                     .firstname("Ivan")
                     .lastname("Ivanov")
-                    .birthDate(LocalDate.of(2000, 1, 1))
-                    .age(20)
+                    .birthDate(new Birthday(LocalDate.of(2000, 1, 19)))
                     .role(Role.ADMIN)
                     .build();
             session.save(user);
