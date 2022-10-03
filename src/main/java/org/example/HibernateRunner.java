@@ -27,7 +27,7 @@ public class HibernateRunner {
             session.beginTransaction();
 
             User user = User.builder()
-                    .username("ivan@gmail.com")
+                    .username("ivan9@gmail.com")
                     .firstname("Ivan")
                     .lastname("Ivanov")
                     .birthDate(new Birthday(LocalDate.of(2000, 1, 19)))
@@ -39,7 +39,13 @@ public class HibernateRunner {
                             }
                             """)
                     .build();
-            session.save(user);
+            //session.save(user);
+            //session.update(user);
+            //session.saveOrUpdate(user);
+            //session.delete(user);
+            User user1 = session.get(User.class, "ivan@gmail.com");
+            System.out.println(user1);
+
             session.getTransaction().commit();
         }
     }
