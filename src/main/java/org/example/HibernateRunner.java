@@ -1,5 +1,6 @@
 package org.example;
 
+import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import org.example.converter.BirthdayConverter;
 import org.example.entity.Birthday;
 import org.example.entity.Role;
@@ -19,6 +20,7 @@ public class HibernateRunner {
         configuration.addAnnotatedClass(User.class);
         configuration.setPhysicalNamingStrategy(new CamelCaseToUnderscoresNamingStrategy());
         configuration.addAttributeConverter(new BirthdayConverter());//if field was not annotated
+        configuration.registerTypeOverride(new JsonBinaryType());
 
         try (SessionFactory sessionFactory = configuration.buildSessionFactory();
              Session session = sessionFactory.openSession()) {
@@ -30,6 +32,12 @@ public class HibernateRunner {
                     .lastname("Ivanov")
                     .birthDate(new Birthday(LocalDate.of(2000, 1, 19)))
                     .role(Role.ADMIN)
+                    .info("""
+                            {
+                            "name": "Ivan",
+                            "id": "25"
+                            }
+                            """)
                     .build();
             session.save(user);
             session.getTransaction().commit();
